@@ -1,0 +1,263 @@
+/* Outer container for everything */
+.ai-copywriting {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+/* Header section: title & subtitle */
+.ai-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.ai-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #2563eb;
+}
+.ai-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* Content type row: put the two buttons side by side */
+.content-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the buttons to be less tall/wide */
+.content-type-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: white;
+  color: #64748b;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.content-type-button:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+.content-type-button.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.content-type-button .icon {
+  font-size: 1.25rem;
+}
+
+/* Form container: place fields in a tidy grid */
+.generation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Full-width fields that span both columns if needed */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.content-type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Key points area */
+.key-points-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.key-point-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.remove-point {
+  padding: 0.5rem;
+  border: none;
+  background: #fee2e2;
+  color: #ef4444;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.remove-point:hover {
+  background: #fecaca;
+}
+
+.add-point {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px dashed #e2e8f0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #2563eb;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.add-point:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+/* Generate button – full width but smaller height */
+.generate-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+.generate-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+.generate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.generate-button.loading {
+  position: relative;
+  color: transparent;
+}
+.generate-button.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+.error-message {
+  padding: 1rem;
+  background: #fee2e2;
+  color: #ef4444;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Optional: ensure the final output container is separate */
+.generated-content {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.generated-content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.content-preview {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  white-space: pre-line;
+  line-height: 1.6;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.suggestions {
+  margin-top: 1.5rem;
+}
+
+.suggestions h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+
+.suggestions ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.suggestions li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #2563eb;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

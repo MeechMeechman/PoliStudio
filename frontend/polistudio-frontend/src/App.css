@@ -1,3 +1,259 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s var(--transition-bounce);
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s, transform 0.5s var(--transition-bounce);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 4px;
+  transition: background-color var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-primary);
+}
+
+/* Focus styles */
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+  transition: box-shadow var(--transition-fast);
+}
+
+/* Selection styles */
+::selection {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Interactive Elements */
+a, button, input, select, textarea {
+  transition: all var(--transition-smooth);
+  will-change: transform, opacity, background-color, color, border-color;
+}
+
+a:hover, button:hover {
+  transform: translateY(-1px);
+}
+
+a:active, button:active {
+  transform: translateY(1px);
+}
+
+/* Responsive container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  animation: containerAppear 0.5s var(--transition-bounce);
+}
+
+@keyframes containerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typography with animations */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  transition: color var(--transition-fast);
+}
+
+h1:hover, h2:hover {
+  color: var(--primary-color);
+}
+
+p {
+  line-height: 1.6;
+  transition: color var(--transition-fast);
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--primary-color) 0%, 
+    var(--primary-dark) 50%, 
+    var(--primary-color) 100%
+  );
+  background-size: 200% 100%;
+  animation: loadingProgress 1.5s infinite linear;
+  z-index: 1000;
+}
+
+@keyframes loadingProgress {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Error Shake Animation */
+.shake {
+  animation: shake 0.5s var(--transition-bounce);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* Success Animation */
+.success-bounce {
+  animation: successBounce 0.5s var(--transition-bounce);
+}
+
+@keyframes successBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Form Elements */
+input, textarea, select {
+  padding: calc(var(--spacing-unit) * 1.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: calc(var(--border-radius) / 2);
+  font-size: 16px;
+  transition: all var(--transition-smooth);
+  background: var(--background-secondary);
+  font-family: inherit;
+}
+
+input:hover, textarea:hover, select:hover {
+  border-color: var(--primary-color);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Buttons */
+button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+  border-radius: calc(var(--border-radius) / 2);
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Card Hover Effect */
+.card {
+  transition: all var(--transition-smooth);
+  will-change: transform, box-shadow;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* List Item Animations */
+.list-item {
+  animation: listItemAppear 0.5s var(--transition-bounce) backwards;
+}
+
+.list-item:nth-child(n) {
+  animation-delay: calc(0.1s * var(--n));
+}
+
+@keyframes listItemAppear {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +291,99 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.app-header {
+  background-color: #282c34;
+  padding: 2rem;
+  color: white;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.voter-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .voter-section {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+.voter-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.voter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.voter-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.voter-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.voter-card p {
+  margin: 0.25rem 0;
+  color: #666;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  margin-top: 1rem;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.error {
+  color: #dc3545;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: #f8d7da;
+  border-radius: 4px;
 }
