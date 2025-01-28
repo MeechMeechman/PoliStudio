@@ -5,6 +5,8 @@ import VoterList from './components/VoterList';
 import VoterForm from './components/VoterForm';
 import ImportVotersCSV from './components/ImportVotersCSV';
 import AICopywriting from './components/AICopywriting';
+import VolunteerForm from './components/VolunteerForm';
+import VolunteerList from './components/VolunteerList';
 import './App.css';
 import './styles/Dashboard.css';
 
@@ -31,7 +33,12 @@ function App() {
           <Route path="/ai-copywriting" element={<AICopywriting />} />
           <Route path="/door-knocking" element={<ComingSoon feature="Door Knocking" />} />
           <Route path="/phone-banking" element={<ComingSoon feature="Phone Banking" />} />
-          <Route path="/volunteer-management" element={<ComingSoon feature="Volunteer Management" />} />
+          <Route path="/volunteer-management" element={
+            <div className="volunteer-section">
+              <VolunteerForm onVolunteerCreated={() => {}} />
+              <VolunteerList />
+            </div>
+          } />
           <Route path="/donor-tracking" element={<ComingSoon feature="Donor Tracking" />} />
           <Route path="/events" element={<ComingSoon feature="Events & Calendar" />} />
           <Route path="/analytics" element={<ComingSoon feature="Analytics & Reporting" />} />

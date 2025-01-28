@@ -31,3 +31,15 @@ class Donor(Base):
     email = Column(String, unique=True)
     amount_donated = Column(Float, default=0.0)
     last_donation_date = Column(DateTime, default=None)
+
+class Volunteer(Base):
+    __tablename__ = "volunteers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String, index=True)
+    last_name = Column(String, index=True)
+    email = Column(String, unique=True)
+    phone = Column(String)
+    availability = Column(String)  # JSON string of available times
+    skills = Column(String)  # JSON string of skills
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

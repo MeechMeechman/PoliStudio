@@ -46,3 +46,21 @@ class UserRead(UserBase):
 
     class Config:
         orm_mode = True
+
+class VolunteerBase(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    phone: Optional[str] = None
+    availability: Optional[str] = None
+    skills: Optional[str] = None
+
+class VolunteerCreate(VolunteerBase):
+    pass
+
+class VolunteerRead(VolunteerBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
