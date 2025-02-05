@@ -1,130 +1,88 @@
 import React, { useState } from 'react';
 import { createVolunteer } from '../services/volunteerService';
 
-function VolunteerForm({ onVolunteerCreated }) {
+function VolunteerForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
     email: '',
-    phone: '',
-    availability: '',
-    skills: '',
+    phone: ''
   });
-  const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError(null);
-
+    setError('');
+    setSuccessMessage('');
+    
     try {
-      const newVolunteer = await createVolunteer(formData);
-      if (onVolunteerCreated) {
-        onVolunteerCreated(newVolunteer);
+      const response = await createVolunteer(formData);
+      setSuccessMessage(response.message);
+      
+      // If this is a returning volunteer, pre-fill the form with their data
+      if (!response.is_new_volunteer) {
+        setFormData({
+          first_name: response.first_name,
+          last_name: response.last_name,
+          email: response.email,
+          phone: response.phone || ''
+        });
       }
-      setFormData({
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        availability: '',
-        skills: '',
-      });
+      
+      // Call the onSubmit callback with the volunteer data
+      onSubmit(response);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setSubmitting(false);
     }
   };
 
   return (
-    <div className="volunteer-form">
-      <h2>Add New Volunteer</h2>
+    <form onSubmit={handleSubmit} className="volunteer-form">
+      {successMessage && (
+        <div className="success-message">
+          {successMessage}
+        </div>
+      )}
+      <div className="form-group">
+        <label>First Name</label>
+        <input
+          type="text"
+          value={formData.first_name}
+          onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Last Name</label>
+        <input
+          type="text"
+          value={formData.last_name}
+          onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label>Phone</label>
+        <input
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          required
+        />
+      </div>
       {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="first_name">First Name:</label>
-          <input
-            type="text"
-            id="first_name"
-            name="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="last_name">Last Name:</label>
-          <input
-            type="text"
-            id="last_name"
-            name="last_name"
-            value={formData.last_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="phone">Phone:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="availability">Availability:</label>
-          <textarea
-            id="availability"
-            name="availability"
-            value={formData.availability}
-            onChange={handleChange}
-            placeholder="e.g., Weekday evenings, Weekend mornings"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="skills">Skills:</label>
-          <textarea
-            id="skills"
-            name="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            placeholder="e.g., Phone banking, Door knocking, Event planning"
-          />
-        </div>
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Adding...' : 'Add Volunteer'}
-        </button>
-      </form>
-    </div>
+      <button type="submit">Start Phone Banking</button>
+    </form>
   );
 }
 

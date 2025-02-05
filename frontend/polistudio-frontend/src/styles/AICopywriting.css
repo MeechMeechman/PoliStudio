@@ -1,4 +1,4 @@
-/* Outer container for everything */
+/* Outer container for the AI copywriting page */
 .ai-copywriting {
   max-width: 800px;
   margin: 2rem auto;
@@ -6,31 +6,33 @@
 }
 
 /* Header section: title & subtitle */
-.ai-header {
+.ai-copywriting .ai-header {
   text-align: center;
   margin-bottom: 2rem;
 }
-.ai-header h1 {
+
+.ai-copywriting .ai-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #2563eb;
 }
-.ai-header p {
+
+.ai-copywriting .ai-header p {
   color: #64748b;
   font-size: 1.1rem;
 }
 
-/* Content type row: put the two buttons side by side */
-.content-container {
+/* Content container */
+.ai-copywriting .content-container {
   background: white;
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Style for the buttons to be less tall/wide */
-.content-type-button {
+/* Content type buttons */
+.ai-copywriting .content-type-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,37 +46,40 @@
   transition: all 0.2s ease;
   cursor: pointer;
 }
-.content-type-button:hover {
+
+.ai-copywriting .content-type-button:hover {
   border-color: #2563eb;
   color: #2563eb;
 }
-.content-type-button.active {
+
+.ai-copywriting .content-type-button.active {
   border-color: #2563eb;
   background: #eff6ff;
   color: #2563eb;
 }
 
-.content-type-button .icon {
+.ai-copywriting .content-type-button .icon {
   font-size: 1.25rem;
 }
 
-/* Form container: place fields in a tidy grid */
-.generation-form {
+/* Generation form */
+.ai-copywriting .generation-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Full-width fields that span both columns if needed */
-.full-width {
+/* Full-width fields (if needed) */
+.ai-copywriting .full-width {
   grid-column: 1 / -1;
 }
 
-.form-group {
+/* Form group and label styles */
+.ai-copywriting .form-group {
   margin-bottom: 0;
 }
 
-.form-group label {
+.ai-copywriting .form-group label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -82,17 +87,11 @@
   font-size: 0.9rem;
 }
 
-.content-type-selector {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
+/* Input, number and select styles scoped within .ai-copywriting */
+.ai-copywriting input[type="text"],
+.ai-copywriting input[type="number"],
+.ai-copywriting select {
+  width: auto;
   padding: 0.75rem;
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
@@ -102,27 +101,27 @@ select {
   transition: all 0.2s ease;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
+.ai-copywriting input[type="text"]:focus,
+.ai-copywriting input[type="number"]:focus,
+.ai-copywriting select:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* Key points area */
-.key-points-container {
+.ai-copywriting .key-points-container {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.key-point-input {
+.ai-copywriting .key-point-input {
   display: flex;
   gap: 0.5rem;
 }
 
-.remove-point {
+.ai-copywriting .remove-point {
   padding: 0.5rem;
   border: none;
   background: #fee2e2;
@@ -133,11 +132,11 @@ select:focus {
   flex-shrink: 0;
 }
 
-.remove-point:hover {
+.ai-copywriting .remove-point:hover {
   background: #fecaca;
 }
 
-.add-point {
+.ai-copywriting .add-point {
   width: 100%;
   padding: 0.75rem;
   border: 2px dashed #e2e8f0;
@@ -150,13 +149,13 @@ select:focus {
   margin-top: 0.5rem;
 }
 
-.add-point:hover {
+.ai-copywriting .add-point:hover {
   border-color: #2563eb;
   background: #eff6ff;
 }
 
-/* Generate button – full width but smaller height */
-.generate-button {
+/* Generate button – full width but with a smaller height */
+.ai-copywriting .generate-button {
   width: 100%;
   padding: 0.75rem;
   background: #2563eb;
@@ -168,19 +167,23 @@ select:focus {
   transition: all 0.2s ease;
   margin-top: 1rem;
 }
-.generate-button:hover:not(:disabled) {
+
+.ai-copywriting .generate-button:hover:not(:disabled) {
   background: #1d4ed8;
   transform: translateY(-1px);
 }
-.generate-button:disabled {
+
+.ai-copywriting .generate-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
-.generate-button.loading {
+
+.ai-copywriting .generate-button.loading {
   position: relative;
   color: transparent;
 }
-.generate-button.loading::after {
+
+.ai-copywriting .generate-button.loading::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -193,7 +196,8 @@ select:focus {
   animation: spin 1s linear infinite;
 }
 
-.error-message {
+/* Error message */
+.ai-copywriting .error-message {
   padding: 1rem;
   background: #fee2e2;
   color: #ef4444;
@@ -201,14 +205,14 @@ select:focus {
   margin-top: 1rem;
 }
 
-/* Optional: ensure the final output container is separate */
-.generated-content {
+/* Generated output container */
+.ai-copywriting .generated-content {
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 2px solid #e2e8f0;
 }
 
-.generated-content h2 {
+.ai-copywriting .generated-content h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;

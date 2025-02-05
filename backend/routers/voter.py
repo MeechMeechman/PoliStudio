@@ -7,7 +7,7 @@ from database import get_db
 from models import Voter
 from schemas import VoterCreate, VoterRead
 
-router = APIRouter(prefix="/voters", tags=["voters"])
+router = APIRouter(tags=["voters"])
 
 @router.post("/", response_model=VoterRead)
 def create_voter(voter: VoterCreate, db: Session = Depends(get_db)):

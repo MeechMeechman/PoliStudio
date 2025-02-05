@@ -15,10 +15,12 @@ export async function getVolunteers() {
 export async function createVolunteer(volunteerData) {
   try {
     const response = await axios.post(`${API_BASE_URL}/volunteers/`, volunteerData);
+    if (response.data.message) {
+      alert(response.data.message);
+    }
     return response.data;
   } catch (error) {
-    console.error('Error creating volunteer:', error);
-    throw error;
+    throw new Error(error.response?.data?.detail || 'Failed to create volunteer');
   }
 }
 
@@ -28,5 +30,23 @@ export async function deleteVolunteer(id) {
   } catch (error) {
     console.error('Error deleting volunteer:', error);
     throw error;
+  }
+}
+
+export async function getVolunteer(id) {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/volunteers/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Failed to fetch volunteer');
+  }
+}
+
+export async function createOrUpdateVolunteer(formData) {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/volunteers/create-or-update`, formData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Failed to create or update volunteer');
   }
 } 

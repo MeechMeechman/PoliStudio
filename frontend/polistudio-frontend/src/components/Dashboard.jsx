@@ -30,7 +30,7 @@ function Dashboard() {
       description: 'Manage and track phone banking campaigns',
       icon: '📞',
       link: '/phone-banking',
-      available: false
+      available: true
     },
     {
       title: 'Volunteer Management',
@@ -44,7 +44,7 @@ function Dashboard() {
       description: 'Track and manage campaign donations',
       icon: '💰',
       link: '/donor-tracking',
-      available: false
+      available: true
     },
     {
       title: 'Events & Calendar',

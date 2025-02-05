@@ -51,7 +51,7 @@ body {
   font-size: 1.1rem;
 }
 
-.feature-grid {
+.dashboard .feature-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
@@ -60,25 +60,25 @@ body {
 }
 
 @media (max-width: 1200px) {
-  .feature-grid {
+  .dashboard .feature-grid {
     grid-template-columns: repeat(2, 1fr);
     max-width: 800px;
   }
 }
 
 @media (max-width: 640px) {
-  .feature-grid {
+  .dashboard .feature-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
     padding: 1rem;
   }
   
-  .feature-card {
+  .dashboard .feature-card {
     min-height: 180px;
   }
 }
 
-.feature-card {
+.dashboard .feature-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -97,12 +97,12 @@ body {
   width: 100%;
 }
 
-.feature-card:hover {
+.dashboard .feature-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.feature-card::before {
+.dashboard .feature-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -116,29 +116,29 @@ body {
   border-radius: 1rem 1rem 0 0;
 }
 
-.feature-card:hover::before {
+.dashboard .feature-card:hover::before {
   transform: scaleX(1);
 }
 
-.feature-icon {
+.dashboard .feature-icon {
   font-size: 2.5rem;
   margin-bottom: 0.75rem;
   display: inline-block;
   transition: transform 0.3s ease;
 }
 
-.feature-card:hover .feature-icon {
+.dashboard .feature-card:hover .feature-icon {
   transform: scale(1.1);
 }
 
-.feature-card h2 {
+.dashboard .feature-card h2 {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #1e293b;
 }
 
-.feature-card p {
+.dashboard .feature-card p {
   color: #64748b;
   line-height: 1.4;
   margin-bottom: 0.5rem;
@@ -259,7 +259,7 @@ button:hover::after {
     font-size: 18px;
   }
   
-  .feature-card {
+  .dashboard .feature-card {
     padding: calc(var(--spacing-unit) * 3);
   }
 }
@@ -388,27 +388,61 @@ input[type="file"]:hover {
   color: var(--text-secondary);
 }
 
-button {
-  background-color: var(--primary-color);
+.dashboard .primary-button {
+  width: auto !important;
+  padding: 0.75rem 1.5rem !important;
+  background-color: var(--primary-color) !important;
   color: white;
   border: none;
-  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
-  border-radius: calc(var(--border-radius) / 2);
-  font-size: 16px;
-  font-weight: 500;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-button:hover:not(:disabled) {
-  background-color: #0066CC;
-  transform: translateY(-1px);
+.dashboard .primary-button:hover {
+  background-color: var(--primary-dark);
 }
 
-button:disabled {
-  background-color: var(--text-secondary);
+.dashboard .primary-button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.dashboard .secondary-button {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #1f2937;
+}
+
+.dashboard .secondary-button:hover {
+  background-color: #f8fafc;
+}
+
+.dashboard .danger-button {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.dashboard .danger-button:hover {
+  background-color: #b91c1c;
+}
+
+.dashboard .icon-button {
+  padding: 0.5rem;
+  width: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dashboard .icon-button:hover {
+  background-color: #f1f5f9;
+  transform: none;
+}
+
+.dashboard .icon-button.danger:hover {
+  background-color: #fee2e2;
 }
 
 /* Coming Soon Pages */

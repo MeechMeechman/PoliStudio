@@ -5,6 +5,11 @@ function ImportVotersCSV() {
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [showExample, setShowExample] = useState(false);
+
+  const exampleCSV = `first_name,last_name,district,support_level,phone,email
+John,Doe,District 1,3,555-0123,john@example.com
+Jane,Smith,District 2,4,555-0124,jane@example.com`;
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -45,7 +50,6 @@ function ImportVotersCSV() {
       const data = await response.json();
       setStatus(`Successfully imported ${data.imported_count} voters!`);
       setFile(null);
-      // Reset the file input
       const fileInput = document.querySelector('input[type="file"]');
       if (fileInput) fileInput.value = '';
     } catch (err) {
@@ -55,14 +59,58 @@ function ImportVotersCSV() {
     }
   };
 
+  const copyExample = () => {
+    navigator.clipboard.writeText(exampleCSV);
+    setStatus('Example CSV copied to clipboard!');
+    setTimeout(() => setStatus(''), 3000);
+  };
+
   return (
     <div className="import-csv">
       <h2>Import Voters CSV</h2>
-      <p className="instructions">
-        Upload a CSV file with the following columns:<br />
-        <code>first_name, last_name, district, support_level</code>
-      </p>
       
+      <div className="import-guidelines">
+        <h3>CSV Format Guidelines</h3>
+        <div className="guidelines-content">
+          <div className="required-fields">
+            <h4>Required Fields:</h4>
+            <ul>
+              <li><code>first_name</code> - Voter's first name</li>
+              <li><code>last_name</code> - Voter's last name</li>
+            </ul>
+          </div>
+          
+          <div className="optional-fields">
+            <h4>Optional Fields:</h4>
+            <ul>
+              <li><code>district</code> - Voter's district</li>
+              <li><code>support_level</code> - Number from 0-5 (0 = unknown, 5 = strong support)</li>
+              <li><code>phone</code> - Phone number (used for phone banking)</li>
+              <li><code>email</code> - Email address</li>
+            </ul>
+          </div>
+
+          <div className="example-section">
+            <h4>Example CSV Format:</h4>
+            <button 
+              className="toggle-example" 
+              onClick={() => setShowExample(!showExample)}
+            >
+              {showExample ? 'Hide Example' : 'Show Example'}
+            </button>
+            
+            {showExample && (
+              <div className="csv-example">
+                <pre>{exampleCSV}</pre>
+                <button className="copy-example" onClick={copyExample}>
+                  Copy Example
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="file-input-container">
           <input 

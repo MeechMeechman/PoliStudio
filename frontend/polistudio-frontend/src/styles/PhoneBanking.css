@@ -1,0 +1,424 @@
+/* Global Variables */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success-color: #22c55e;
+  --danger-color: #dc2626;
+  --border-radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --background-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-color: #333;
+  --muted-text: #666;
+}
+
+/* Global Defaults */
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+/* Phone Banking Admin Container */
+.phone-banking-admin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background-light);
+  min-height: 100vh;
+}
+
+/* Campaigns Grid / Container */
+.phone-banking-admin .campaigns-container,
+.phone-banking-admin .campaigns-list {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* Campaign Card */
+.phone-banking-admin .campaign-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.phone-banking-admin .campaign-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Form Elements – Group, Labels, and Inputs */
+.phone-banking-admin .form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  width: 100%;
+  max-width: 400px;
+}
+
+.phone-banking-admin .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.phone-banking-admin .form-group input,
+.phone-banking-admin .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.phone-banking-admin .form-group input:focus,
+.phone-banking-admin .form-group textarea:focus,
+.phone-banking-admin .form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Form Actions (e.g., Create Campaign Button) */
+.phone-banking-admin .form-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.phone-banking-admin .form-actions button {
+  min-width: 200px;
+  width: auto;
+}
+
+/* Primary Button */
+.phone-banking-admin .primary-button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  width: auto;
+}
+
+.phone-banking-admin .primary-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.phone-banking-admin .primary-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Copy Button (for Volunteer Link) */
+.phone-banking-admin .copy-button {
+  padding: 0.5rem;
+  width: auto;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.phone-banking-admin .copy-button:hover {
+  background-color: #f1f5f9;
+}
+
+/* Campaign Actions */
+.phone-banking-admin .campaign-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Icon Buttons in Campaign Actions */
+.phone-banking-admin .campaign-actions .icon-button {
+  padding: 0.5rem;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  max-width: max-content;
+}
+
+.phone-banking-admin .campaign-actions .icon-button:hover {
+  background-color: #f1f5f9;
+}
+
+.phone-banking-admin .campaign-actions .icon-button.danger:hover {
+  background-color: #fee2e2;
+}
+
+/* Additional Campaign Card Content */
+.phone-banking-admin .campaign-card h3 {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+.phone-banking-admin .campaign-card p {
+  font-size: 1rem;
+  color: var(--muted-text);
+  margin-bottom: 0.5rem;
+}
+
+/* Link Container */
+.phone-banking-admin .link-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.phone-banking-admin .link-container input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+/* Support Level Buttons */
+.phone-banking-admin .support-level-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.phone-banking-admin .support-level-button {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.phone-banking-admin .support-level-button:hover {
+  border-color: var(--primary-color);
+}
+
+.phone-banking-admin .support-level-button.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* File Input Styling */
+.phone-banking-admin .file-input-wrapper {
+  max-width: 600px;
+  margin: 1rem auto;
+}
+
+.phone-banking-admin input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: white;
+}
+
+/* Back Button */
+.phone-banking-admin .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: #1e293b;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 2rem;
+}
+
+.phone-banking-admin .back-button:hover {
+  color: var(--primary-color);
+}
+
+/* Script Content */
+.phone-banking-admin .script-content {
+  background: var(--background-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  white-space: pre-wrap;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .phone-banking-admin .campaigns-container,
+  .phone-banking-admin .campaigns-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Campaign Statistics Dropdown Styles */
+.phone-banking-admin .campaign-stats-dropdown {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  margin-bottom: 1rem;
+}
+
+.phone-banking-admin .campaign-stats-dropdown select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: white;
+  font-size: 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.phone-banking-admin .campaign-stats-dropdown select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.phone-banking-admin .campaign-stats-dropdown:hover select {
+  border-color: var(--primary-hover);
+}
+
+.phone-banking-admin .campaign-stats-dropdown::after {
+  content: '▾';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--muted-text);
+}
+
+/* Campaign Statistics Styles */
+.phone-banking-admin .campaign-stats {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.phone-banking-admin .campaign-stats h3 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Grid Layout for Stat Cards */
+.phone-banking-admin .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Stat Cards (Completion Rate, Call Outcomes, Support Levels) */
+.phone-banking-admin .stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.phone-banking-admin .stat-card h4 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--primary-color);
+}
+
+/* Completion Rate Number and Detail */
+.phone-banking-admin .stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.phone-banking-admin .stat-detail {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}
+
+/* Call Outcomes List */
+.phone-banking-admin .stat-list div {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+/* Support Levels Styling */
+.phone-banking-admin .support-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.phone-banking-admin .support-level-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phone-banking-admin .support-level-bar span:first-child {
+  flex: 1;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.phone-banking-admin .support-level-bar .bar {
+  flex: 2;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  margin: 0 0.5rem;
+  overflow: hidden;
+}
+
+.phone-banking-admin .support-level-bar .bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.phone-banking-admin .support-level-bar span:last-child {
+  width: 2rem;
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
