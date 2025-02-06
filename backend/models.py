@@ -1,6 +1,7 @@
 # backend/models.py
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 import datetime
 
 Base = declarative_base()
@@ -20,7 +21,7 @@ class Voter(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, index=True)
     last_name = Column(String, index=True)
-    district = Column(String)
+    address = Column(String, index=True)
     support_level = Column(Integer, default=0)  # e.g. 0 (unknown) to 5 (strong support)
     phone = Column(String, nullable=True)  # Add phone number field
     email = Column(String, nullable=True)  # Optional: add email for additional contact info
@@ -73,3 +74,27 @@ class PhoneContact(Base):
     notes = Column(String, nullable=True)
     last_called = Column(DateTime, nullable=True)
     volunteer_id = Column(Integer, ForeignKey("volunteers.id"), nullable=True)
+
+# ===== Door Knocking Models =====
+
+class Turf(Base):
+    __tablename__ = "turfs"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    boundary = Column(Text)  # JSON string representing polygon coordinates
+    assigned_to = Column(Integer, ForeignKey("volunteers.id"), nullable=True)
+
+    volunteer = relationship("Volunteer", backref="turfs")
+    canvassing_logs = relationship("CanvassingLog", back_populates="turf", cascade="all, delete-orphan")
+
+class CanvassingLog(Base):
+    __tablename__ = "canvassing_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    voter_id = Column(Integer, ForeignKey("voters.id"))
+    turf_id = Column(Integer, ForeignKey("turfs.id", ondelete="CASCADE"))
+    interaction_date = Column(DateTime, default=datetime.datetime.utcnow)
+    result = Column(String)  # e.g., "Support", "No Contact", "Refused"
+    notes = Column(Text, nullable=True)
+
+    voter = relationship("Voter")
+    turf = relationship("Turf", back_populates="canvassing_logs")

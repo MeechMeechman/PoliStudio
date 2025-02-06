@@ -5,7 +5,7 @@ function VoterForm({ onVoterCreated }) {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
-    district: '',
+    address: '',
     support_level: 0
   });
   const [error, setError] = useState(null);
@@ -73,12 +73,12 @@ function VoterForm({ onVoterCreated }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="district">District:</label>
+          <label htmlFor="address">Address:</label>
           <input
             type="text"
-            id="district"
-            name="district"
-            value={formData.district}
+            id="address"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
           />
         </div>

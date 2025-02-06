@@ -15,7 +15,7 @@ async def import_voters_csv(
 ):
     """
     Upload a CSV file of voters in the format:
-    first_name,last_name,district,support_level
+    first_name,last_name,address,support_level
     """
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="File must be a .csv")
@@ -41,7 +41,7 @@ async def import_voters_csv(
         voter = Voter(
             first_name=row["first_name"].strip(),
             last_name=row["last_name"].strip(),
-            district=row.get("district", "").strip(),
+            address=row.get("address", "").strip(),
             support_level=support_level,
         )
         db.add(voter)

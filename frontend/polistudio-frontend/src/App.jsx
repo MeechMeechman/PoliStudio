@@ -14,6 +14,8 @@ import './styles/PhoneBanking.css';
 import './styles/App.css';
 import './styles/Dashboard.css';
 import DonorTracking from './components/DonorTracking';
+import DoorKnockingDashboard from './components/DoorKnockingDashboard';
+import DoorKnockingVolunteer from './components/DoorKnockingVolunteer';
 
 function App() {
   return (
@@ -30,7 +32,8 @@ function App() {
           } />
           <Route path="/import" element={<ImportVotersCSV />} />
           <Route path="/ai-copywriting" element={<AICopywriting />} />
-          <Route path="/door-knocking" element={<ComingSoon feature="Door Knocking" />} />
+          <Route path="/door-knocking" element={<DoorKnockingDashboard />} />
+          <Route path="/door-knocking/volunteer/:volunteerId" element={<DoorKnockingVolunteer />} />
           <Route path="/phone-banking" element={<PhoneBankingAdmin />} />
           <Route path="/phone-banking/volunteer/:campaignId" element={<PhoneBankingVolunteer />} />
           <Route path="/volunteer-management" element={

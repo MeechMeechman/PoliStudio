@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 from models import Base
-from routers import voter, import_data, ai_router, volunteer, phone_banking, donors, donations
+from routers import voter, import_data, ai_router, volunteer, phone_banking, donors, donations, door_knocking
 
 app = FastAPI(title="PoliStudio API")
 
@@ -27,6 +27,7 @@ app.include_router(import_data.router, prefix="/import", tags=["import"])
 app.include_router(ai_router.router, prefix="/ai", tags=["ai"])
 app.include_router(donors.router)
 app.include_router(donations.router)
+app.include_router(door_knocking.router, prefix="/door-knocking", tags=["door-knocking"])
 
 @app.get("/")
 async def root():

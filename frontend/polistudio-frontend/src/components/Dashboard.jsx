@@ -23,7 +23,7 @@ function Dashboard() {
       description: 'Plan and track door-to-door canvassing',
       icon: '🚶',
       link: '/door-knocking',
-      available: false
+      available: true
     },
     {
       title: 'Phone Banking',

@@ -9,6 +9,18 @@ function VoterList({ onVoterDeleted }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function fetchVoters() {
+      setLoading(true);
+      try {
+        const data = await getVoters();
+        setVoters(data);
+        setFilteredVoters(data);
+      } catch (err) {
+        setError('Failed to fetch voters.');
+      } finally {
+        setLoading(false);
+      }
+    }
     fetchVoters();
   }, []);
 
@@ -18,37 +30,23 @@ function VoterList({ onVoterDeleted }) {
       return (
         voter.first_name.toLowerCase().includes(searchLower) ||
         voter.last_name.toLowerCase().includes(searchLower) ||
-        (voter.district && voter.district.toLowerCase().includes(searchLower))
+        (voter.address && voter.address.toLowerCase().includes(searchLower))
       );
     });
     setFilteredVoters(filtered);
   }, [searchTerm, voters]);
 
-  async function fetchVoters() {
-    try {
-      const data = await getVoters();
-      setVoters(data);
-      setFilteredVoters(data);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleDelete(id) {
+  const handleDelete = async (id) => {
     try {
       await deleteVoter(id);
-      const updatedVoters = voters.filter(voter => voter.id !== id);
-      setVoters(updatedVoters);
+      setVoters(voters.filter(voter => voter.id !== id));
       if (onVoterDeleted) {
         onVoterDeleted(id);
       }
     } catch (err) {
-      setError(err.message);
+      console.error(err);
     }
-  }
+  };
 
   if (loading) {
     return <div>Loading voters...</div>;
@@ -65,7 +63,7 @@ function VoterList({ onVoterDeleted }) {
         <div className="search-container">
           <input
             type="text"
-            placeholder="Search by name or district..."
+            placeholder="Search by name or address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -80,7 +78,7 @@ function VoterList({ onVoterDeleted }) {
           {filteredVoters.map((voter) => (
             <div key={voter.id} className="voter-card">
               <h3>{voter.first_name} {voter.last_name}</h3>
-              <p>District: {voter.district || 'Not specified'}</p>
+              <p>Address: {voter.address || 'Not specified'}</p>
               <p>Support Level: {voter.support_level}/5</p>
               <button 
                 onClick={() => handleDelete(voter.id)}

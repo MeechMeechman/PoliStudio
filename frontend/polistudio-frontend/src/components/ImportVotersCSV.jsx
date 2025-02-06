@@ -7,9 +7,9 @@ function ImportVotersCSV() {
   const [uploading, setUploading] = useState(false);
   const [showExample, setShowExample] = useState(false);
 
-  const exampleCSV = `first_name,last_name,district,support_level,phone,email
-John,Doe,District 1,3,555-0123,john@example.com
-Jane,Smith,District 2,4,555-0124,jane@example.com`;
+  const exampleCSV = `first_name,last_name,address,support_level,phone,email
+John,Doe,123 Main St,3,555-0123,john@example.com
+Jane,Smith,456 Elm St,4,555-0124,jane@example.com`;
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -83,7 +83,7 @@ Jane,Smith,District 2,4,555-0124,jane@example.com`;
           <div className="optional-fields">
             <h4>Optional Fields:</h4>
             <ul>
-              <li><code>district</code> - Voter's district</li>
+              <li><code>address</code> - Voter's address</li>
               <li><code>support_level</code> - Number from 0-5 (0 = unknown, 5 = strong support)</li>
               <li><code>phone</code> - Phone number (used for phone banking)</li>
               <li><code>email</code> - Email address</li>

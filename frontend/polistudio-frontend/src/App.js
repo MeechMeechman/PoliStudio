@@ -12,6 +12,8 @@ import './styles/Dashboard.css';
 import PhoneBankingAdmin from './components/PhoneBankingAdmin';
 import PhoneBankingVolunteer from './components/PhoneBankingVolunteer';
 import DonorTracking from './components/DonorTracking';
+import DoorKnockingDashboard from './components/DoorKnockingDashboard';
+import DoorKnockingVolunteer from './components/DoorKnockingVolunteer';
 
 const ComingSoon = ({ feature }) => (
   <div className="coming-soon">
@@ -34,7 +36,8 @@ function App() {
           } />
           <Route path="/import" element={<ImportVotersCSV />} />
           <Route path="/ai-copywriting" element={<AICopywriting />} />
-          <Route path="/door-knocking" element={<ComingSoon feature="Door Knocking" />} />
+          <Route path="/door-knocking" element={<DoorKnockingDashboard />} />
+          <Route path="/door-knocking/volunteer/:volunteerId" element={<DoorKnockingVolunteer />} />
           <Route path="/phone-banking" element={<PhoneBankingAdmin />} />
           <Route path="/phone-banking/volunteer/:campaignId" element={<PhoneBankingVolunteer />} />
           <Route path="/volunteer-management" element={
