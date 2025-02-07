@@ -56,6 +56,7 @@ async def create_campaign(
     contacts_file: Optional[UploadFile] = File(None),
     include_voters: bool = Form(False),
     min_support_level: Optional[int] = Form(None),
+    voter_address_filter: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """Create a new phone banking campaign with optional voter integration"""
@@ -80,6 +81,8 @@ async def create_campaign(
         query = db.query(Voter)
         if min_support_level is not None:
             query = query.filter(Voter.support_level >= min_support_level)
+        if voter_address_filter:
+            query = query.filter(Voter.address.ilike(f"%{voter_address_filter}%"))
         
         voters = query.all()
         voter_contacts = []
@@ -91,7 +94,7 @@ async def create_campaign(
                     first_name=voter.first_name,
                     last_name=voter.last_name,
                     phone_number=voter.phone,
-                    additional_info=f"District: {voter.district}, Support Level: {voter.support_level}",
+                    additional_info=f"Address: {voter.address}, Support Level: {voter.support_level}",
                     support_level=voter.support_level
                 )
                 voter_contacts.append(contact)

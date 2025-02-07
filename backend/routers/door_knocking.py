@@ -12,7 +12,10 @@ geolocator = Nominatim(user_agent="polistudio")
 router = APIRouter()
 
 def get_random_coordinate(address: str) -> (float, float):
-    # Use Nominatim to geocode the provided address
+    # Ensure the address is in Minneapolis, MN by appending it if not already present.
+    if "Minneapolis" not in address:
+        address = f"{address}, Minneapolis, MN"
+    
     location = geolocator.geocode(address)
     if location:
         print(f"Debug: Coordinates for address '{address}' are {location.latitude}, {location.longitude}")

@@ -15,7 +15,7 @@ async def import_voters_csv(
 ):
     """
     Upload a CSV file of voters in the format:
-    first_name,last_name,address,support_level
+    first_name,last_name,address,support_level,phone,email
     """
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="File must be a .csv")
@@ -32,6 +32,13 @@ async def import_voters_csv(
         if "first_name" not in row or "last_name" not in row:
             raise HTTPException(status_code=400, detail="CSV must have first_name, last_name columns")
 
+        first_name = row["first_name"].strip()
+        last_name = row["last_name"].strip()
+
+        # Skip rows that are header rows (i.e., "First Name, Last Name")
+        if first_name.lower() == "first name" and last_name.lower() == "last name":
+            continue
+
         # Convert support_level to int (handle missing or invalid cases)
         try:
             support_level = int(row.get("support_level", 0))
@@ -39,10 +46,12 @@ async def import_voters_csv(
             support_level = 0
 
         voter = Voter(
-            first_name=row["first_name"].strip(),
-            last_name=row["last_name"].strip(),
+            first_name=first_name,
+            last_name=last_name,
             address=row.get("address", "").strip(),
             support_level=support_level,
+            phone=row.get("phone", "").strip(),
+            email=row.get("email", "").strip()
         )
         db.add(voter)
         imported_count += 1

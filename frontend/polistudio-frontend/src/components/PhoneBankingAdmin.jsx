@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createCampaign, getCampaigns, getCampaignStats, exportCampaignData, deleteCampaign } from '../services/phoneBankingService';
 import PhoneBankingStats from './PhoneBankingStats';
+import VoterSelectionModal from './VoterSelectionModal';
 import '../styles/PhoneBanking.css';
 
 function PhoneBankingAdmin() {
@@ -10,6 +11,9 @@ function PhoneBankingAdmin() {
     description: '',
     callsPerVolunteer: 10,
     script: '',
+    includeVoters: false,
+    minSupportLevel: 0,
+    voterAddressFilter: ''
   });
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
@@ -20,6 +24,8 @@ function PhoneBankingAdmin() {
   const [showCSVExample, setShowCSVExample] = useState(false);
   const [showNewCampaignForm, setShowNewCampaignForm] = useState(false);
   const [statsFilter, setStatsFilter] = useState("all");
+  const [showVoterModal, setShowVoterModal] = useState(false);
+  const [selectedVoterIds, setSelectedVoterIds] = useState([]);
   
   const exampleCSV = `first_name,last_name,phone_number,additional_info
 John,Doe,555-0123,Preferred time: evenings
@@ -69,20 +75,33 @@ Bob,Johnson,555-0125,Do not call after 8pm`;
       if (file) {
         formDataToSend.append('contacts_file', file);
       }
-
-      formDataToSend.append('include_voters', 'false');
-      formDataToSend.append('min_support_level', '0');
+      
+      formDataToSend.append('include_voters', formData.includeVoters.toString());
+      
+      if (formData.includeVoters && selectedVoterIds.length > 0) {
+        formDataToSend.append('selected_voter_ids', JSON.stringify(selectedVoterIds));
+      } else if (formData.includeVoters) {
+        formDataToSend.append('min_support_level', formData.minSupportLevel.toString());
+        if (formData.voterAddressFilter) {
+          formDataToSend.append('voter_address_filter', formData.voterAddressFilter);
+        }
+      }
 
       const response = await createCampaign(formDataToSend);
-      setCampaigns([...campaigns, response]); // Remove .campaign since backend returns the campaign directly
+      setCampaigns([...campaigns, response]);
       
+      // Reset form and selected voters
       setFormData({
         name: '',
         description: '',
         callsPerVolunteer: 10,
         script: '',
+        includeVoters: false,
+        minSupportLevel: 0,
+        voterAddressFilter: ''
       });
       setFile(null);
+      setSelectedVoterIds([]);
       const fileInput = document.querySelector('input[type="file"]');
       if (fileInput) fileInput.value = '';
     } catch (err) {
@@ -140,10 +159,6 @@ Bob,Johnson,555-0125,Do not call after 8pm`;
     handleExportData(campaignId);
   };
 
-  const handleDelete = (campaignId, e) => {
-    handleDeleteCampaign(campaignId, e);
-  };
-
   const handleStatsFilterChange = (e) => {
     setStatsFilter(e.target.value);
   };
@@ -168,90 +183,141 @@ Bob,Johnson,555-0125,Do not call after 8pm`;
       )}
 
       {showNewCampaignForm ? (
-        <div className="campaign-form">
-          <h3>Create New Campaign</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Campaign Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Description:</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                required
-                rows={3}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Calls per Volunteer:</label>
-              <input
-                type="number"
-                name="callsPerVolunteer"
-                value={formData.callsPerVolunteer}
-                onChange={handleInputChange}
-                min="1"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Call Script:</label>
-              <textarea
-                name="script"
-                value={formData.script}
-                onChange={handleInputChange}
-                required
-                rows={6}
-                placeholder="Enter the script volunteers should follow..."
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Contact List (CSV):</label>
-              <div className="file-upload">
+        <div className="campaign-form-wrapper">
+          <div className="campaign-form-card">
+            <h3>Create New Campaign</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Campaign Name:</label>
                 <input
-                  type="file"
-                  accept=".csv"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   required
                 />
+              </div>
+              <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                  name="description"
+                  className="form-control"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  required
+                  rows={3}
+                />
+              </div>
+              <div className="form-group">
+                <label>Calls Per Volunteer:</label>
+                <input
+                  type="number"
+                  name="callsPerVolunteer"
+                  className="form-control"
+                  value={formData.callsPerVolunteer}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Call Script:</label>
+                <textarea
+                  name="script"
+                  className="form-control"
+                  value={formData.script}
+                  onChange={handleInputChange}
+                  required
+                  rows={6}
+                  placeholder="Enter the script volunteers should follow..."
+                />
+              </div>
+              <div className="form-group">
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  Include Voters from Voter List
+                  <input
+                    type="checkbox"
+                    name="includeVoters"
+                    checked={formData.includeVoters}
+                    onChange={handleInputChange}
+                    style={{ margin: 0, padding: '0.1rem', width: '50%' }}
+                  />
+                </label>
+              </div>
+              {formData.includeVoters && (
+                <>
+                  <div className="form-group">
+                    <label>Minimum Support Level:</label>
+                    <input
+                      type="number"
+                      name="minSupportLevel"
+                      className="form-control"
+                      value={formData.minSupportLevel}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Voter Address Filter (optional):</label>
+                    <input
+                      type="text"
+                      name="voterAddressFilter"
+                      className="form-control"
+                      value={formData.voterAddressFilter}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button 
+                      type="button"
+                      className="secondary-button"
+                      onClick={() => setShowVoterModal(true)}
+                    >
+                      Select Voters
+                    </button>
+                    {selectedVoterIds.length > 0 && (
+                      <p>{selectedVoterIds.length} voters selected.</p>
+                    )}
+                  </div>
+                </>
+              )}
+              <div className="form-group">
+                <label>Contact List (CSV):</label>
+                <div className="file-upload">
+                  <input
+                    type="file"
+                    accept=".csv"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    required={!formData.includeVoters}
+                  />
+                  <button 
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => setShowCSVExample(!showCSVExample)}
+                  >
+                    View CSV Format
+                  </button>
+                </div>
+                {showCSVExample && (
+                  <div className="csv-example">
+                    <h4>Example CSV Format:</h4>
+                    <pre>{exampleCSV}</pre>
+                  </div>
+                )}
+              </div>
+              <div className="form-actions">
                 <button 
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => setShowCSVExample(!showCSVExample)}
+                  type="submit" 
+                  className="primary-button"
+                  disabled={loading}
                 >
-                  View CSV Format
+                  {loading ? 'Creating...' : 'Create Campaign'}
                 </button>
               </div>
-              {showCSVExample && (
-                <div className="csv-example">
-                  <h4>Example CSV Format:</h4>
-                  <pre>{exampleCSV}</pre>
-                </div>
-              )}
-            </div>
-
-            <div className="form-actions">
-              <button 
-                type="submit" 
-                className="primary-button"
-                disabled={loading}
-              >
-                {loading ? 'Creating...' : 'Create Campaign'}
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       ) : (
         <div className="campaigns-container">
@@ -277,7 +343,7 @@ Bob,Johnson,555-0125,Do not call after 8pm`;
                     </button>
                     <button
                       className="icon-button danger"
-                      onClick={(e) => handleDelete(campaign.id, e)}
+                      onClick={(e) => handleDeleteCampaign(campaign.id, e)}
                       title="Delete campaign"
                     >
                       🗑️
@@ -335,6 +401,14 @@ Bob,Johnson,555-0125,Do not call after 8pm`;
             </div>
           )}
         </div>
+      )}
+
+      {showVoterModal && (
+        <VoterSelectionModal
+          initialSelected={selectedVoterIds}
+          onClose={() => setShowVoterModal(false)}
+          onConfirm={(selectedIds) => { setSelectedVoterIds(selectedIds); setShowVoterModal(false); }}
+        />
       )}
     </div>
   );

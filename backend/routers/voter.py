@@ -16,6 +16,8 @@ def create_voter(voter: VoterCreate, db: Session = Depends(get_db)):
         last_name=voter.last_name,
         address=voter.address,
         support_level=voter.support_level,
+        phone=voter.phone,
+        email=voter.email
     )
     db.add(new_voter)
     db.commit()
@@ -44,6 +46,8 @@ def update_voter(voter_id: int, voter: VoterCreate, db: Session = Depends(get_db
     db_voter.last_name = voter.last_name
     db_voter.address = voter.address
     db_voter.support_level = voter.support_level
+    db_voter.phone = voter.phone
+    db_voter.email = voter.email
 
     db.commit()
     db.refresh(db_voter)
