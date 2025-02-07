@@ -14,6 +14,7 @@ import PhoneBankingVolunteer from './components/PhoneBankingVolunteer';
 import DonorTracking from './components/DonorTracking';
 import DoorKnockingDashboard from './components/DoorKnockingDashboard';
 import DoorKnockingVolunteer from './components/DoorKnockingVolunteer';
+import EventsCalendar from './components/EventsCalendar';
 
 const ComingSoon = ({ feature }) => (
   <div className="coming-soon">
@@ -47,7 +48,7 @@ function App() {
             </div>
           } />
           <Route path="/donor-tracking" element={<DonorTracking />} />
-          <Route path="/events" element={<ComingSoon feature="Events & Calendar" />} />
+          <Route path="/events-calendar" element={<EventsCalendar />} />
           <Route path="/analytics" element={<ComingSoon feature="Analytics & Reporting" />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

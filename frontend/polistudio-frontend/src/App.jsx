@@ -16,6 +16,7 @@ import './styles/Dashboard.css';
 import DonorTracking from './components/DonorTracking';
 import DoorKnockingDashboard from './components/DoorKnockingDashboard';
 import DoorKnockingVolunteer from './components/DoorKnockingVolunteer';
+import EventsCalendar from './components/EventsCalendar';
 
 function App() {
   return (
@@ -43,7 +44,7 @@ function App() {
             </div>
           } />
           <Route path="/donor-tracking" element={<DonorTracking />} />
-          <Route path="/events-calendar" element={<ComingSoon feature="Events & Calendar" />} />
+          <Route path="/events-calendar" element={<EventsCalendar />} />
           <Route path="/analytics-reporting" element={<ComingSoon feature="Analytics & Reporting" />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

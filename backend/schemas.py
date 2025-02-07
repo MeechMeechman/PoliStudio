@@ -1,6 +1,6 @@
 # backend/schemas.py
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Any
 from datetime import datetime
 
 class VoterBase(BaseModel):
@@ -159,6 +159,60 @@ class CanvassingLogRead(CanvassingLogBase):
     interaction_date: datetime
     result: str
     notes: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+class EventBase(BaseModel):
+    name: str
+    date_time: datetime
+    location: str
+    description: Optional[str] = None
+    type: Optional[str] = None
+    recurring: Optional[bool] = False
+    recurrence_pattern: Optional[Any] = None
+
+class EventCreate(EventBase):
+    pass
+
+class EventUpdate(BaseModel):
+    name: Optional[str] = None
+    date_time: Optional[datetime] = None
+    location: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[str] = None
+    recurring: Optional[bool] = None
+    recurrence_pattern: Optional[Any] = None
+
+class EventRead(EventBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class RSVPBase(BaseModel):
+    user_id: int
+    status: str
+
+class RSVPCreate(RSVPBase):
+    pass
+
+class RSVPRead(RSVPBase):
+    id: int
+    event_id: int
+
+    class Config:
+        orm_mode = True
+
+class EventVolunteerBase(BaseModel):
+    volunteer_id: int
+
+class EventVolunteerCreate(EventVolunteerBase):
+    pass
+
+class EventVolunteerRead(EventVolunteerBase):
+    id: int
+    event_id: int
 
     class Config:
         orm_mode = True

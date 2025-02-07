@@ -51,7 +51,7 @@ function Dashboard() {
       description: 'Schedule and manage campaign events',
       icon: '📅',
       link: '/events-calendar',
-      available: false
+      available: true
     },
     {
       title: 'Analytics & Reporting',

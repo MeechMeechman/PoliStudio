@@ -1,0 +1,107 @@
+/* Styling for the Events and Calendar Page */
+
+.events-calendar-page {
+  background: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.events-header {
+  background: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.events-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+.events-header button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.events-header button:hover {
+  background: #0056b3;
+}
+
+.events-container {
+  flex: 1;
+  padding: 1rem 2rem;
+}
+
+/* FullCalendar specific styling */
+.fc {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.fc-toolbar {
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+}
+
+.fc .fc-button {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #333;
+  margin: 0 2px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.fc .fc-button:hover {
+  background: #e6e6e6;
+}
+
+.fc .fc-daygrid-event {
+  background: #007bff;
+  border: none;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.fc .fc-timegrid-event {
+  background: #28a745;
+  border: none;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Modal Styling for Event Details & RSVP */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal .modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}

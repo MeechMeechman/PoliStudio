@@ -1,5 +1,5 @@
 # backend/models.py
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, ForeignKey, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import datetime
@@ -98,3 +98,36 @@ class CanvassingLog(Base):
 
     voter = relationship("Voter")
     turf = relationship("Turf", back_populates="canvassing_logs")
+
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    date_time = Column(DateTime, nullable=False)
+    location = Column(String, nullable=False)
+    description = Column(Text)
+    type = Column(String)  # e.g., Rally, Fundraiser, Volunteer Drive
+    recurring = Column(Boolean, default=False)
+    recurrence_pattern = Column(JSON, nullable=True)
+    
+    # Relationships
+    rsvps = relationship("RSVP", back_populates="event", cascade="all, delete-orphan")
+    volunteers = relationship("EventVolunteer", back_populates="event", cascade="all, delete-orphan")
+
+class RSVP(Base):
+    __tablename__ = "rsvps"
+    id = Column(Integer, primary_key=True, index=True)
+    event_id = Column(Integer, ForeignKey("events.id"), nullable=False)
+    user_id = Column(Integer, nullable=False)  # You might use a proper User FK here
+    status = Column(String, nullable=False)  # Attending, Maybe, Declined
+    
+    event = relationship("Event", back_populates="rsvps")
+
+class EventVolunteer(Base):
+    __tablename__ = "event_volunteers"
+    id = Column(Integer, primary_key=True, index=True)
+    event_id = Column(Integer, ForeignKey("events.id"), nullable=False)
+    volunteer_id = Column(Integer, ForeignKey("volunteers.id"), nullable=False)
+    
+    event = relationship("Event", back_populates="volunteers")
+    # Optionally add a relationship to the Volunteer model
