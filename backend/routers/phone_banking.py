@@ -8,12 +8,13 @@ from sqlalchemy import func
 from fastapi.responses import StreamingResponse
 
 from database import get_db
-from models import PhoneBankingCampaign, PhoneContact, Voter
+from models import PhoneBankingCampaign, PhoneContact, Voter, User
 from schemas import CampaignCreate, CampaignRead, ContactUpdate, CampaignWithContacts
+from auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(tags=["phone_banking"])
 
-async def process_contacts_file(file: UploadFile, campaign_id: int, db: Session):
+async def process_contacts_file(file: UploadFile, campaign_id: int, db: Session, current_user: User):
     try:
         content = await file.read()
         decoded = content.decode('utf-8')
@@ -57,14 +58,16 @@ async def create_campaign(
     include_voters: bool = Form(False),
     min_support_level: Optional[int] = Form(None),
     voter_address_filter: Optional[str] = Form(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """Create a new phone banking campaign with optional voter integration"""
     campaign = PhoneBankingCampaign(
         name=name,
         description=description,
         script=script,
-        calls_per_volunteer=calls_per_volunteer
+        calls_per_volunteer=calls_per_volunteer,
+        user_id=current_user.id
     )
     db.add(campaign)
     db.commit()
@@ -74,7 +77,7 @@ async def create_campaign(
 
     # Process CSV file if provided
     if contacts_file:
-        total_contacts += await process_contacts_file(contacts_file, campaign.id, db)
+        total_contacts += await process_contacts_file(contacts_file, campaign.id, db, current_user)
 
     # Include voters if requested
     if include_voters:
@@ -109,16 +112,17 @@ async def create_campaign(
     return campaign
 
 @router.get("/campaigns")
-async def get_campaigns(db: Session = Depends(get_db)):
+async def get_campaigns(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get all phone banking campaigns"""
-    campaigns = db.query(PhoneBankingCampaign).all()
+    campaigns = db.query(PhoneBankingCampaign).filter(PhoneBankingCampaign.user_id == current_user.id).all()
     return campaigns
 
 @router.get("/campaigns/{campaign_id}")
-async def get_campaign(campaign_id: int, db: Session = Depends(get_db)):
+async def get_campaign(campaign_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get a specific campaign by ID"""
     campaign = db.query(PhoneBankingCampaign).filter(
-        PhoneBankingCampaign.id == campaign_id
+        PhoneBankingCampaign.id == campaign_id,
+        PhoneBankingCampaign.user_id == current_user.id
     ).first()
     
     if not campaign:
@@ -130,11 +134,13 @@ async def get_campaign(campaign_id: int, db: Session = Depends(get_db)):
 async def get_campaign_contacts(
     campaign_id: int,
     volunteer_id: Optional[int] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """Get contacts for a specific campaign"""
     campaign = db.query(PhoneBankingCampaign).filter(
-        PhoneBankingCampaign.id == campaign_id
+        PhoneBankingCampaign.id == campaign_id,
+        PhoneBankingCampaign.user_id == current_user.id
     ).first()
     
     if not campaign:
@@ -155,7 +161,8 @@ async def get_campaign_contacts(
 async def update_contact(
     contact_id: int,
     contact_update: ContactUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """Update a contact's status and information"""
     contact = db.query(PhoneContact).filter(PhoneContact.id == contact_id).first()
@@ -171,10 +178,12 @@ async def update_contact(
 async def get_volunteer_calls(
     campaign_id: int,
     volunteer_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     campaign = db.query(PhoneBankingCampaign).filter(
-        PhoneBankingCampaign.id == campaign_id
+        PhoneBankingCampaign.id == campaign_id,
+        PhoneBankingCampaign.user_id == current_user.id
     ).first()
     
     if not campaign:
@@ -209,7 +218,8 @@ async def get_volunteer_calls(
 async def update_call(
     call_id: int,
     update: ContactUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     contact = db.query(PhoneContact).filter(PhoneContact.id == call_id).first()
     if not contact:
@@ -227,10 +237,12 @@ async def update_call(
 @router.get("/campaigns/{campaign_id}/stats")
 async def get_campaign_stats(
     campaign_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     campaign = db.query(PhoneBankingCampaign).filter(
-        PhoneBankingCampaign.id == campaign_id
+        PhoneBankingCampaign.id == campaign_id,
+        PhoneBankingCampaign.user_id == current_user.id
     ).first()
     
     if not campaign:
@@ -269,8 +281,8 @@ async def get_campaign_stats(
     }
 
 @router.delete("/campaigns/{campaign_id}")
-async def delete_campaign(campaign_id: int, db: Session = Depends(get_db)):
-    campaign = db.query(PhoneBankingCampaign).filter(PhoneBankingCampaign.id == campaign_id).first()
+async def delete_campaign(campaign_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    campaign = db.query(PhoneBankingCampaign).filter(PhoneBankingCampaign.id == campaign_id, PhoneBankingCampaign.user_id == current_user.id).first()
     if not campaign:
         raise HTTPException(status_code=404, detail="Campaign not found")
     
@@ -284,9 +296,9 @@ async def delete_campaign(campaign_id: int, db: Session = Depends(get_db)):
     return {"message": "Campaign deleted successfully"}
 
 @router.get("/campaigns/{campaign_id}/export")
-async def export_campaign_data(campaign_id: int, db: Session = Depends(get_db)):
+async def export_campaign_data(campaign_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     # Get campaign and its contacts
-    campaign = db.query(PhoneBankingCampaign).filter(PhoneBankingCampaign.id == campaign_id).first()
+    campaign = db.query(PhoneBankingCampaign).filter(PhoneBankingCampaign.id == campaign_id, PhoneBankingCampaign.user_id == current_user.id).first()
     if not campaign:
         raise HTTPException(status_code=404, detail="Campaign not found")
     

@@ -55,10 +55,10 @@ function Dashboard() {
     },
     {
       title: 'Analytics & Reporting',
-      description: 'View campaign performance metrics',
+      description: 'AI powered campaign insights',
       icon: '📊',
       link: '/analytics-reporting',
-      available: false
+      available: true
     }
   ];
 
@@ -87,4 +87,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard; 
+export default Dashboard;

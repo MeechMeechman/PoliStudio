@@ -55,7 +55,7 @@ def create_turf(turf: TurfCreate, db: Session = Depends(get_db)):
     return new_turf
 
 @router.get("/turf/{turf_id}/voters", response_model=List[dict])
-def get_turf_voters(turf_id: int, db: Session = Depends(get_db)):
+def get_turf_voters(turf_id: int, db: Session = Depends(get_db), public: bool = False):
     turf = db.query(Turf).filter(Turf.id == turf_id).first()
     if not turf:
         raise HTTPException(status_code=404, detail="Turf not found")
@@ -72,6 +72,18 @@ def get_turf_voters(turf_id: int, db: Session = Depends(get_db)):
             continue
         lat, lng = get_random_coordinate(voter.address)
         if point_in_polygon(lat, lng, turf_boundary):
+            # Check for canvassing logs to determine status
+            status = "pending"
+            support_level = getattr(voter, 'support_level', None)
+            canvassing_log = db.query(CanvassingLog).filter(
+                CanvassingLog.voter_id == voter.id,
+                CanvassingLog.turf_id == turf_id
+            ).first()
+            
+            if canvassing_log:
+                status = "completed"
+                support_level = canvassing_log.result
+            
             filtered_voters.append({
                 "id": voter.id,
                 "first_name": voter.first_name,
@@ -82,7 +94,9 @@ def get_turf_voters(turf_id: int, db: Session = Depends(get_db)):
                 "age": getattr(voter, 'age', None),
                 "party": getattr(voter, 'party', None),
                 "voting_history": getattr(voter, 'voting_history', None),
-                "support_level": getattr(voter, 'support_level', None)
+                "support_level": support_level,
+                "status": status,
+                "turf_name": turf.name
             })
     return filtered_voters
 
@@ -119,16 +133,32 @@ def log_canvassing_interaction(log: CanvassingLogCreate, db: Session = Depends(g
     turf = db.query(Turf).filter(Turf.id == log.turf_id).first()
     if not turf:
         raise HTTPException(status_code=404, detail="Turf not found")
-    new_log = CanvassingLog(
-        voter_id=log.voter_id,
-        turf_id=log.turf_id,
-        result=log.result,
-        notes=log.notes
-    )
-    db.add(new_log)
-    db.commit()
-    db.refresh(new_log)
-    return new_log
+    
+    # Check if there's already a log for this voter in this turf
+    existing_log = db.query(CanvassingLog).filter(
+        CanvassingLog.voter_id == log.voter_id,
+        CanvassingLog.turf_id == log.turf_id
+    ).first()
+    
+    if existing_log:
+        # Update existing log
+        existing_log.result = log.result
+        existing_log.notes = log.notes
+        db.commit()
+        db.refresh(existing_log)
+        return existing_log
+    else:
+        # Create new log
+        new_log = CanvassingLog(
+            voter_id=log.voter_id,
+            turf_id=log.turf_id,
+            result=log.result,
+            notes=log.notes
+        )
+        db.add(new_log)
+        db.commit()
+        db.refresh(new_log)
+        return new_log
 
 @router.delete("/turf/{turf_id}")
 def delete_turf(turf_id: int, db: Session = Depends(get_db)):

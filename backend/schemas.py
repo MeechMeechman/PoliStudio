@@ -49,10 +49,26 @@ class UserCreate(UserBase):
 
 class UserRead(UserBase):
     id: int
-    created_at: datetime
 
     class Config:
         orm_mode = True
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+# Authentication schemas
 
 class VolunteerBase(BaseModel):
     first_name: str
